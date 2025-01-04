@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reactify - Advanced Product Customizer</title>
+  <style>
+    body {
+      font-family:Lato;
+      font-size: small;
+      margin: 0;
+      padding: 0;
+      background-color: #101820;
+      color: #fff;
+    }
+    header {
+      background: linear-gradient(135deg, #ffcc00, #ff6600);
+      color: #fff;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      border-bottom: 5px solid #ff6600;
+      position: relative;
+      overflow: hidden;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2.5rem;
+      text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+      position: relative;
+      display: inline-block;
+      animation: glitch 1s infinite;
+    }
+    @keyframes glitch {
+      0% {
+        transform: translate(0);
+      }
+      20% {
+        transform: translate(-2px, 2px);
+      }
+      40% {
+        transform: translate(-2px, -2px);
+      }
+      60% {
+        transform: translate(2px, 2px);
+      }
+      80% {
+        transform: translate(2px, -2px);
+      }
+      100% {
+        transform: translate(0);
+      }
+    }
+    header h1::before,
+    header h1::after {
+      content: 'Reactify';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #ffcc00, #ff6600);
+      overflow: hidden;
+      clip: rect(0, 900px, 0, 0);
+    }
+    header h1::before {
+      left: 2px;
+      text-shadow: -2px 0 red;
+      animation: glitchTop 1s infinite;
+    }
+    header h1::after {
+      left: -2px;
+      text-shadow: -2px 0 blue;
+      animation: glitchBottom 1s infinite;
+    }
+    @keyframes glitchTop {
+      0% {
+        clip: rect(0, 900px, 0, 0);
+      }
+      10% {
+        clip: rect(10px, 900px, 40px, 0);
+      }
+      20% {
+        clip: rect(85px, 900px, 100px, 0);
+      }
+      30% {
+        clip: rect(45px, 900px, 65px, 0);
+      }
+      40% {
+        clip: rect(10px, 900px, 40px, 0);
+      }
+      50% {
+        clip: rect(85px, 900px, 100px, 0);
+      }
+      60% {
+        clip: rect(45px, 900px, 65px, 0);
+      }
+      70% {
+        clip: rect(10px, 900px, 40px, 0);
+      }
+      80% {
+        clip: rect(85px, 900px, 100px, 0);
+      }
+      90% {
+        clip: rect(45px, 900px, 65px, 0);
+      }
+      100% {
+        clip: rect(0, 900px, 0, 0);
+      }
+    }
+    @keyframes glitchBottom {
+      0% {
+        clip: rect(0, 900px, 0, 0);
+      }
+      10% {
+        clip: rect(85px, 900px, 100px, 0);
+      }
+      20% {
+        clip: rect(10px, 900px, 40px, 0);
+      }
+      30% {
+        clip: rect(45px, 900px, 65px, 0);
+      }
+      40% {
+        clip: rect(85px, 900px, 100px, 0);
+      }
+      50% {
+        clip: rect(10px, 900px, 40px, 0);
+      }
+      60% {
+        clip: rect(45px, 900px, 65px, 0);
+      }
+      70% {
+        clip: rect(85px, 900px, 100px, 0);
+      }
+      80% {
+        clip: rect(10px, 900px, 40px, 0);
+      }
+      90% {
+        clip: rect(45px, 900px, 65px, 0);
+      }
+      100% {
+        clip: rect(0, 900px, 0, 0);
+      }
+    }
+    nav ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+    nav ul li {
+      display: inline;
+    }
+    nav ul li a {
+      color: #fff;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    main {
+      display: flex;
+      gap: 30px;
+      align-items: flex-start;
+      padding: 20px;
+    }
+    .customization-tool {
+      background-color: #1c1c1c;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      border-radius: 10px;
+      padding: 20px;
+      max-width: 300px;
+      width: 100%;
+      text-align: center;
+    }
+    .customization-tool h2 {
+      margin-bottom: 15px;
+      color: #ffffff;
+    }
+    .customization-tool div {
+      margin-bottom: 15px;
+    }
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 5px;
+      color: #ccc;
+    }
+    input[type="color"],
+    input[type="text"],
+    input[type="checkbox"] {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #333;
+      border-radius: 5px;
+      outline: none;
+      font-size: 1rem;
+      background-color: #2c2c2c;
+      color: white;
+    }
+    .controls button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      background-color: #007bff;
+      color: white;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.2s;
+    }
+    .controls button:hover {
+      background-color: #0056b3;
+      transform: translateY(-3px);
+    }
+    .product-view {
+      position: relative;
+      max-width: 400px;
+      width: 100%;
+      perspective: 1000px;
+    }
+    .product-container {
+      position: relative;
+      width: 100%;
+      transform-style: preserve-3d;
+    }
+    .product-image {
+      width: 100%;
+      height: auto;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(255, 255, 255, 0.3);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .additional-image {
+      position: absolute;
+      top:350px;
+      left:650px;
+      max-width: 400px;
+      width: 100%; 
+      height: auto;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(255, 255, 255, 0.3);
+    }
+    .reflection {
+      position: absolute;
+      bottom: -10%;
+      left: 0;
+      width: 100%;
+      height: 50%;
+      background: linear-gradient(rgba(255, 255, 255, 0.1), transparent);
+      opacity: 0.5;
+      transform-origin: top;
+      transform: scaleY(-1);
+      filter: blur(5px);
+    }
+    .dynamic-light {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.8), transparent);
+      pointer-events: none;
+      mix-blend-mode: screen;
+      transform: translate(-50%, -50%);
+      transition: all 0.2s ease-out;
+    }
+    .pointer {
+      position: fixed;
+      width: 20px;
+      height: 20px;
+      background-color: #007bff;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 1000;
+      transform: translate(-50%, -50%) scale(1);
+      transition: transform 0.2s ease, background-color 0.3s ease;
+    }
+    .text-overlay {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: white;
+      text-shadow: 2px 2px 10px rgba(0, 255, 255, 0.5);
+      pointer-events: all;
+      cursor: move;
+    }
+   .video-container {
+      position: absolute;
+      top: 115px;
+      right: 90px;
+      max-width: 400px;
+      width: 100%;
+      height: auto;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(255, 255, 255, 0.3);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      
+    }
+    .video-container video {
+      width: 100%;
+      height: auto;
+      border-radius: 10px;
+      object-fit: cover;
+    }
+    
+      .video-container2 {
+        position: absolute;
+        bottom: 20px;
+        left: 20px;
+        max-width: 400px;
+        width: 100%;
+        height: auto;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(255, 255, 255, 0.3);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+      .video-container2 video {
+        width: 100%;
+        height: auto;
+        border-radius: 10px;
+        object-fit: cover;
+      }
+      .mute-button {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        background-color: rgba(0, 0, 0, 0.5);
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 5px 10px;
+        cursor: pointer;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+      .video-container:hover .mute-button {
+        opacity: 1;
+      }
+    
+    section {
+      padding: 20px;
+      text-align: center;
+    }
+    section h2 {
+      font-size: 2rem;
+      margin-bottom: 10px;
+    }
+    section p {
+      font-size: 1rem;
+      color: #ccc;
+    }
+   .product-detail {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  padding: 20px;
+  background-color: #e55231;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  margin: 20px 0;
+  position: relative;
+  overflow: hidden;
+  animation: glitch 1s infinite;
+}
+
+.product-detail::before,
+.product-detail::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: inherit;
+  mix-blend-mode: overlay;
+  clip: rect(0, 900px, 0, 0);
+}
+
+.product-detail::before {
+  left: 2px;
+  text-shadow: -2px 0 red;
+  animation: glitchTop 1s infinite;
+}
+
+.product-detail::after {
+  left: -2px;
+  text-shadow: -2px 0 blue;
+  animation: glitchBottom 1s infinite;
+}
+
+@keyframes glitch {
+  0% {
+    transform: translate(0);
+  }
+  20% {
+    transform: translate(-2px, 2px);
+  }
+  40% {
+    transform: translate(-2px, -2px);
+  }
+  60% {
+    transform: translate(2px, 2px);
+  }
+  80% {
+    transform: translate(2px, -2px);
+  }
+  100% {
+    transform: translate(0);
+  }
+}
+
+@keyframes glitchTop {
+  0% {
+    clip: rect(0, 900px, 0, 0);
+  }
+  10% {
+    clip: rect(10px, 900px, 40px, 0);
+  }
+  20% {
+    clip: rect(85px, 900px, 100px, 0);
+  }
+  30% {
+    clip: rect(45px, 900px, 65px, 0);
+  }
+  40% {
+    clip: rect(10px, 900px, 40px, 0);
+  }
+  50% {
+    clip: rect(85px, 900px, 100px, 0);
+  }
+  60% {
+    clip: rect(45px, 900px, 65px, 0);
+  }
+  70% {
+    clip: rect(10px, 900px, 40px, 0);
+  }
+  80% {
+    clip: rect(85px, 900px, 100px, 0);
+  }
+  90% {
+    clip: rect(45px, 900px, 65px, 0);
+  }
+  100% {
+    clip: rect(0, 900px, 0, 0);
+  }
+}
+
+@keyframes glitchBottom {
+  0% {
+    clip: rect(0, 900px, 0, 0);
+  }
+  10% {
+    clip: rect(85px, 900px, 100px, 0);
+  }
+  20% {
+    clip: rect(10px, 900px, 40px, 0);
+  }
+  30% {
+    clip: rect(45px, 900px, 65px, 0);
+  }
+  40% {
+    clip: rect(85px, 900px, 100px, 0);
+  }
+  50% {
+    clip: rect(10px, 900px, 40px, 0);
+  }
+  60% {
+    clip: rect(45px, 900px, 65px, 0);
+  }
+  70% {
+    clip: rect(85px, 900px, 100px, 0);
+  }
+  80% {
+    clip: rect(10px, 900px, 40px, 0);
+  }
+  90% {
+    clip: rect(45px, 900px, 65px, 0);
+  }
+  100% {
+    clip: rect(0, 900px, 0, 0);
+  }
+}
+    
+    .product-detail-image {
+      max-width: 200px;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(255, 255, 255, 0.3);
+    }
+    
+    .product-detail-info {
+      color: #fff;
+      text-align: left;
+    }
+    
+    .product-detail-info h3 {
+      margin-top: 0;
+      font-size: 1.5rem;
+      text-shadow: 
+        0 0 5px #fff,
+        0 0 10px #fff,
+        0 0 20px #fff,
+        0 0 30px #ff6600,
+        0 0 40px #ff6600,
+        0 0 50px #ff6600,
+        0 0 60px #ff6600;
+      animation: neonGlow 1.5s infinite alternate;
+    }
+    
+    @keyframes neonGlow {
+      from {
+        text-shadow: 
+          0 0 5px #fff,
+          0 0 10px #fff,
+          0 0 20px #fff,
+          0 0 30px #ff6600,
+          0 0 40px #ff6600,
+          0 0 50px #ff6600,
+          0 0 60px #ff6600;
+      }
+      to {
+        text-shadow: 
+          0 0 10px #fff,
+          0 0 20px #fff,
+          0 0 30px #ff6600,
+          0 0 40px #ff6600,
+          0 0 50px #ff6600,
+          0 0 60px #ff6600,
+          0 0 70px #ff6600;
+      }
+    }
+    
+    .product-detail-info ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    
+    .product-detail-info ul li {
+      background: url('checkmark-icon.png') no-repeat left center;
+      font-size: 1rem;
+      color: #ccc;
+      margin-bottom: 2px; /* Minimal gap between list items */
+      line-height: 1.5;
+      text-align: left;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .gallery-button {
+      padding: 15px 30px;
+      border: none;
+      border-radius: 50px;
+      background: linear-gradient(135deg, #ffcc00, #ff6600);
+      color: rgb(255, 255, 255);
+      font-size: 1.2rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
+      margin-top: 20px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .gallery-button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.2);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    
+    .gallery-button:hover {
+      background: linear-gradient(135deg, #ff6600, #ffcc00);
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+    }
+    
+    .gallery-button:hover::before {
+      opacity: 1;
+    }
+    
+    .gallery-button:active {
+      transform: translateY(1px);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    }
+    .payment-form {
+      background-color: #1c1c1c;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      max-width: 400px;
+      margin: 20px auto;
+      color: #fff;
+    }
+    
+    .payment-form .form-group {
+      margin-bottom: 15px;
+    }
+    
+    .payment-form label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+      color: #ccc;
+    }
+    
+    .payment-form input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #333;
+      border-radius: 5px;
+      background-color: #2c2c2c;
+      color: #fff;
+      font-size: 1rem;
+    }
+    
+    .pay-button {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      background-color: #e7422f;
+      color: #fff;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.2s;
+    }
+    
+    .pay-button:hover {
+      background-color: #0056b3;
+      transform: translateY(-3px);
+    }
+    footer ul {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
+    footer ul li a {
+      color: #fff;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Reactify</h1>
+    <nav>
+      <ul>
+        <li><a href="#home">Home</a></li>
+        <li><a href="#products">Products</a></li>
+        <li><a href="#about">About Us</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <div class="customization-tool">
+      <h2>Customize Your Product</h2>
+      <div>
+        <label for="colorPicker">Choose Color:</label>
+        <input type="color" id="colorPicker">
+      </div>
+      <div>
+        <label for="addText">Text:</label>
+        <input type="text" id="addText" placeholder="Enter text">
+      </div>
+      <div> <label for="toggleText">Show Text Overlay:</label> <input type="checkbox" id="toggleText" checked> </div> 
+      
+    
+    </div> 
+    
+  
+    <div class="product-view">
+      <div class="product-container">
+        <img id="shoeImage" class="product-image" src="photo-1542291026-7eec264c27ff.avif" alt="Customizable Product">
+        
+        <div id="reflection" class="reflection"></div>
+        <div id="dynamicLight" class="dynamic-light"></div>
+        <div id="textOverlay" class="text-overlay" style="display: none;">Your Text Here</div>
+        <img id="additionalImage" class="additional-image" src=".\photo-1575456456278-936c89ccdb7b.avif" alt="Additional Image">
+      </div>
+    </div>
+    <div class="video-container">
+      <video id="video1" autoplay muted loop playsinline controlsList="nodownload" disablePictureInPicture>
+        <source src="./Untitled video - Made with Clipchamp (1).mp4" type="video/mp4">
+      </video>
+      <button class="mute-button" onclick="toggleMute('video1')">🔊</button>
+    </div>
+
+    <div class="video-container2">
+      <video id="video2" autoplay muted loop playsinline controlsList="nodownload" disablePictureInPicture>
+        <source src=".\23.mp4" type="video/mp4">
+      </video>
+      <button class="mute-button" onclick="toggleMute('video2')">🔊</button>
+    </div>
+ 
+    <script>
+      function toggleMute(videoId) {
+        const video = document.getElementById(videoId);
+        video.muted = !video.muted;
+        const button = video.nextElementSibling;
+        button.textContent = video.muted ? '🔇' : '🔊';
+      }
+    </script>
+    
+  </main>
+
+  <section id="products">
+    <h2>Our Products</h2>
+    <p>Discover a wide variety of shoes tailored for every occasion.</p>
+  </section>
+
+  <section id="about">
+    <h2>About Us</h2>
+    <p>Reactify is dedicated to providing the best quality shoes for every occasion</p>
+      <p> From sports to casual wear, we’ve got you covered!</p>
+  </section>
+
+  <section id="contact">
+    <h2>Contact Us</h2>
+    <p>Email: support@reactify.com</p>
+    <p>Phone: +1 234 567 890</p>
+  </section>
+  <section id="product-details">
+    <h2>Product Details</h2>
+    <div class="product-detail">
+      <img src=".\photo-1600185365483-26d7a4cc7519.avif" alt="Product Image" class="product-detail-image">
+      <div class="product-detail-info">
+        <h3>Latest</h3>
+        <p>Product Name: Nike Air Max</p>
+        <p>Brand: Nike</p>
+        <p>Model: Air Max</p>
+        <p>Price: $150</p>
+        <p>Description: This is a high-quality running shoe designed for comfort and performance.</p>
+        <p>Features:</p>
+        <ul>
+       <li>Breathable mesh upper</li>
+       <li>Durable rubber outsole</li>
+       <li>Lightweight cushioning</li>
+       <li>Stylish design</li>
+        </ul>
+        <button class="gallery-button" onclick="goToGallery()">Go Through Gallery</button>
+      </div>
+    </div>
+  </section>
+  <section id="payment">
+    <h2>Payment Options</h2>
+    <form class="payment-form">
+      <div class="form-group">
+        <label for="cardName">Name on Card:</label>
+        <input type="text" id="cardName" name="cardName" required>
+      </div>
+      <div class="form-group">
+        <label for="cardNumber">Card Number:</label>
+        <input type="text" id="cardNumber" name="cardNumber" required>
+      </div>
+      <div class="form-group">
+        <label for="expiryDate">Expiry Date:</label>
+        <input type="text" id="expiryDate" name="expiryDate" placeholder="MM/YY" required>
+      </div>
+      <div class="form-group">
+        <label for="cvv">CVV:</label>
+        <input type="text" id="cvv" name="cvv" required>
+      </div>
+      <button type="submit" class="pay-button">Pay Now</button>
+    </form>
+  </section>
+
+
+  <footer>
+    <p>&copy; 2025 Reactify. All rights reserved.</p>
+    <ul>
+      <li><a href="#">Facebook</a></li>
+      <li><a href="#">Twitter</a></li>
+      <li><a href="#">Instagram</a></li>
+    </ul>
+  </footer>
+
+  <script>
+    // Elements
+    const colorPicker = document.getElementById('colorPicker');
+    const dynamicLight = document.getElementById('dynamicLight');
+    const productImage = document.getElementById('shoeImage');
+    const textInput = document.getElementById('addText');
+    const textOverlay = document.getElementById('textOverlay');
+    const toggleText = document.getElementById('toggleText');
+
+    // Move dynamic light
+    document.addEventListener('mousemove', (e) => {
+      const rect = productImage.getBoundingClientRect();
+      const x = e.clientX - rect.left; 
+      const y = e.clientY - rect.top; 
+
+      dynamicLight.style.left = `${x}px`;
+      dynamicLight.style.top = `${y}px`;
+    });
+
+    // Change shoe color
+    colorPicker.addEventListener('input', (e) => {
+      productImage.style.filter = `hue-rotate(${Math.random() * 360}deg)`;
+    });
+
+    // Update text overlay
+    textInput.addEventListener('input', () => {
+      const text = textInput.value.trim();
+      textOverlay.textContent = text || "Your Text Here";
+    });
+
+    // Toggle text overlay visibility
+    toggleText.addEventListener('change', (e) => {
+      textOverlay.style.display = e.target.checked ? 'block' : 'none';
+    });
+
+    // Enable dragging for text overlay
+    let isDragging = false;
+    let offsetX, offsetY;
+
+    textOverlay.addEventListener('mousedown', (e) => {
+      isDragging = true;
+      offsetX = e.offsetX;
+      offsetY = e.offsetY;
+    });
+
+    document.addEventListener('mousemove', (e) => {
+      if (isDragging) {
+        textOverlay.style.left = `${e.clientX - offsetX}px`;
+        textOverlay.style.top = `${e.clientY - offsetY}px`;
+      }
+    });
+
+    document.addEventListener('mouseup', () => {
+      isDragging = false;
+    });
+    
+  </script>
+</body>
+</html>
